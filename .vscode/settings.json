@@ -1,0 +1,34 @@
+{
+  "omnisharp.enableEditorConfigSupport": true,
+  "omnisharp.enableRoslynAnalyzers": true,
+  "omnisharp.enableAsyncCompletion": true,
+  "omnisharp.disablePromptUntilFeatureInstalled": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/bin": true,
+    "**/obj": true,
+    ".vs": true,
+    ".idea": true,
+    "*.user": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/bin/**": true,
+    "**/obj/**": true,
+    ".vs/**": true
+  },
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.formatOnSave": true
+  },
+  "dotnet.defaultSolutionOrFolder": "${workspaceFolder}/UniversiteBackEnd",
+  "csharp.semanticHighlighting.enabled": true,
+  "editor.formatOnSave": true,
+  "editor.rulers": [120],
+  "search.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+    ".vs": true,
+    ".idea": true
+  }
+}

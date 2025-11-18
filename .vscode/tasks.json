@@ -1,0 +1,152 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/UniversiteBackEnd.sln",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "test",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "test",
+        "${workspaceFolder}/UniversiteDomainUnitTest/UniversiteDomainUnitTest.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "clean",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "clean",
+        "${workspaceFolder}/UniversiteBackEnd.sln"
+      ]
+    },
+    {
+      "label": "New Project: Class Library",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "new",
+        "classlib",
+        "-n",
+        "${input:projectName}",
+        "-o",
+        "${workspaceFolder}/${input:projectName}"
+      ],
+      "problemMatcher": [],
+      "inputs": [
+        {
+          "id": "projectName",
+          "type": "promptString",
+          "description": "Nom du projet"
+        }
+      ]
+    },
+    {
+      "label": "New Project: Console App",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "new",
+        "console",
+        "-n",
+        "${input:projectName}",
+        "-o",
+        "${workspaceFolder}/${input:projectName}"
+      ],
+      "problemMatcher": [],
+      "inputs": [
+        {
+          "id": "projectName",
+          "type": "promptString",
+          "description": "Nom du projet"
+        }
+      ]
+    },
+    {
+      "label": "New Project: ASP.NET Web API",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "new",
+        "webapi",
+        "-n",
+        "${input:projectName}",
+        "-o",
+        "${workspaceFolder}/${input:projectName}"
+      ],
+      "problemMatcher": [],
+      "inputs": [
+        {
+          "id": "projectName",
+          "type": "promptString",
+          "description": "Nom du projet"
+        }
+      ]
+    },
+    {
+      "label": "Add Project to Solution",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "sln",
+        "${workspaceFolder}/UniversiteBackEnd.sln",
+        "add",
+        "${input:projectPath}"
+      ],
+      "problemMatcher": [],
+      "inputs": [
+        {
+          "id": "projectPath",
+          "type": "promptString",
+          "description": "Chemin du .csproj (ex: UniversiteApplication/UniversiteApplication.csproj)"
+        }
+      ]
+    },
+    {
+      "label": "Add Project Reference",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "add",
+        "${input:projectFrom}",
+        "reference",
+        "${input:projectTo}"
+      ],
+      "problemMatcher": [],
+      "inputs": [
+        {
+          "id": "projectFrom",
+          "type": "promptString",
+          "description": "Chemin du .csproj source (ex: UniversiteApplication/UniversiteApplication.csproj)"
+        },
+        {
+          "id": "projectTo",
+          "type": "promptString",
+          "description": "Chemin du .csproj cible (ex: UniversiteDomain/UniversiteDomain.csproj)"
+        }
+      ]
+    }
+  ]
+}
