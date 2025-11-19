@@ -7,9 +7,9 @@ namespace UniversiteDomain.UseCases.NoteUseCases.Create;
 
 public class CreateNoteUseCase(IRepositoryFactory repositoryFactory)
 {
-    public async Task<Note> ExecuteAsync(float valeur, Etudiant etudiant, Ue ue)
+    public async Task<Note> ExecuteAsync(float valeur, long etudiantId, long ueId)
     {
-        var note = new Note { Valeur = valeur, EtudiantNotee = etudiant, UeNotee = ue };
+        var note = new Note { Valeur = valeur, EtudiantId = etudiantId, UeId = ueId };
         return await ExecuteAsync(note);
     }
 
@@ -24,8 +24,6 @@ public class CreateNoteUseCase(IRepositoryFactory repositoryFactory)
     private async Task CheckBusinessRules(Note note)
     {
         ArgumentNullException.ThrowIfNull(note);
-        ArgumentNullException.ThrowIfNull(note.EtudiantNotee);
-        ArgumentNullException.ThrowIfNull(note.UeNotee);
         ArgumentNullException.ThrowIfNull(repositoryFactory);
         ArgumentNullException.ThrowIfNull(repositoryFactory.NoteRepository());
 
@@ -36,11 +34,11 @@ public class CreateNoteUseCase(IRepositoryFactory repositoryFactory)
         // Vérifier qu'il n'existe pas déjà une note pour cet étudiant dans cette UE
         List<Note> existe = await repositoryFactory.NoteRepository()
             .FindByConditionAsync(n =>
-                n.EtudiantNotee != null && n.EtudiantNotee.Id == note.EtudiantNotee.Id &&
-                n.UeNotee != null && n.UeNotee.Id == note.UeNotee.Id);
+                n.EtudiantId == note.EtudiantId &&
+                n.UeId == note.UeId);
 
         if (existe is { Count: > 0 })
             throw new DuplicateNoteException(
-                $"Une note existe déjà pour l'étudiant {note.EtudiantNotee.NumEtud} dans l'UE {note.UeNotee.NumeroUe}");
+                $"Une note existe déjà pour l'étudiant {note.EtudiantId} dans l'UE {note.UeId}");
     }
 }

@@ -10,23 +10,16 @@ namespace UniversiteDomainUnitTests;
 
 public class NoteUnitTest
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [Test]
     public async Task CreateNoteUseCase()
     {
         // Arrange
-        long id = 1;
+        long etudiantId = 1;
+        long ueId = 1;
         float valeur = 15.5f;
 
-        Etudiant etudiant = new Etudiant { Id = 1, NumEtud = "et1", Nom = "Durant", Prenom = "Jean", Email = "jean.durant@etud.u-picardie.fr" };
-        Ue ue = new Ue { Id = 1, NumeroUe = "UE001", Intitule = "Programmation" };
-
-        Note noteSansId = new Note { Valeur = valeur, EtudiantNotee = etudiant, UeNotee = ue };
-        Note noteCreee = new Note { Id = id, Valeur = valeur, EtudiantNotee = etudiant, UeNotee = ue };
+        Note noteSansId = new Note { Valeur = valeur, EtudiantId = etudiantId, UeId = ueId };
+        Note noteCreee = new Note { Valeur = valeur, EtudiantId = etudiantId, UeId = ueId };
 
         // Simulation du repository
         var mockNote = new Mock<INoteRepository>();
@@ -42,9 +35,8 @@ public class NoteUnitTest
         var noteTeste = await useCase.ExecuteAsync(noteSansId);
 
         // Assert
-        Assert.That(noteTeste.Id, Is.EqualTo(noteCreee.Id));
         Assert.That(noteTeste.Valeur, Is.EqualTo(noteCreee.Valeur));
-        Assert.That(noteTeste.EtudiantNotee?.Id, Is.EqualTo(etudiant.Id));
-        Assert.That(noteTeste.UeNotee?.Id, Is.EqualTo(ue.Id));
+        Assert.That(noteTeste.EtudiantId, Is.EqualTo(etudiantId));
+        Assert.That(noteTeste.UeId, Is.EqualTo(ueId));
     }
 }
