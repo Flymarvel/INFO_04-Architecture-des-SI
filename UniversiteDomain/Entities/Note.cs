@@ -6,6 +6,6 @@ public class Note
     public long EtudiantId { get; set; }
     public long UeId { get; set; }
 
-    public Etudiant Etudiant { get; set; } = new();
-    public Ue Ue { get; set; } = new();
+    public Etudiant? Etudiant { get; set; }
+    public Ue? Ue { get; set; }
 }
