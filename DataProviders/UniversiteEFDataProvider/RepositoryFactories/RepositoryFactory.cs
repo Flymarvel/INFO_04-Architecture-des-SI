@@ -4,6 +4,7 @@ using UniversiteDomain.DataAdapters.DataAdaptersFactory;
 using UniversiteEFDataProvider.Data;
 using UniversiteEFDataProvider.Entities;
 using UniversiteEFDataProvider.Repositories;
+using UniversiteEFDataProvider.Services;
 
 namespace UniversiteEFDataProvider.RepositoryFactories;
 
@@ -15,6 +16,7 @@ public class RepositoryFactory(UniversiteDbContext context, UserManager<Universi
     private INoteRepository? _notes;
     private IUniversiteRoleRepository? _roles;
     private IUniversiteUserRepository? _users;
+    private ICsvNoteService? _csvNoteService;
 
     public IParcoursRepository ParcoursRepository()
     {
@@ -68,6 +70,15 @@ public class RepositoryFactory(UniversiteDbContext context, UserManager<Universi
             _users = new UniversiteUserRepository(context ?? throw new InvalidOperationException(), userManager, roleManager);
         }
         return _users;
+    }
+
+    public ICsvNoteService CsvNoteService()
+    {
+        if (_csvNoteService == null)
+        {
+            _csvNoteService = new CsvNoteService();
+        }
+        return _csvNoteService;
     }
 
     public async Task SaveChangesAsync()

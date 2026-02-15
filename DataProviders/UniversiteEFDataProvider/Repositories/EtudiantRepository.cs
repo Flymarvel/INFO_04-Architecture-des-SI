@@ -27,4 +27,10 @@ public class EtudiantRepository(UniversiteDbContext context) : Repository<Etudia
         ArgumentNullException.ThrowIfNull(Context.Etudiants);
         return await Context.Etudiants.Include(e => e.NotesObtenues!).ThenInclude(n => n.Ue).FirstOrDefaultAsync(e => e.Id == idEtudiant);
     }
+
+    public async Task<Etudiant?> FindByNumEtudAsync(string numEtud)
+    {
+        ArgumentNullException.ThrowIfNull(Context.Etudiants);
+        return await Context.Etudiants.FirstOrDefaultAsync(e => e.NumEtud == numEtud);
+    }
 }
