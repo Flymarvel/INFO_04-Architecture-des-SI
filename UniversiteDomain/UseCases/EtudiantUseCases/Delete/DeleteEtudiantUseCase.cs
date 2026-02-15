@@ -9,6 +9,14 @@ public class DeleteEtudiantUseCase(IRepositoryFactory repositoryFactory)
     public async Task ExecuteAsync(long id)
     {
         await CheckBusinessRules(id);
+
+        // Supprimer d'abord le user associé à l'étudiant
+        await repositoryFactory.UniversiteUserRepository().DeleteByEtudiantIdAsync(id);
+
+        // Supprimer les notes de l'étudiant
+        await repositoryFactory.NoteRepository().DeleteByEtudiantIdAsync(id);
+
+        // Supprimer l'étudiant
         await repositoryFactory.EtudiantRepository().DeleteAsync(id);
         await repositoryFactory.EtudiantRepository().SaveChangesAsync();
     }
@@ -23,8 +31,11 @@ public class DeleteEtudiantUseCase(IRepositoryFactory repositoryFactory)
         if (etudiant == null) throw new EtudiantNotFoundException("Etudiant avec l'id " + id + " non trouvé");
     }
 
-    public bool IsAuthorized(string role)
+    public bool IsAuthorized(string role, IUniversiteUser? user, long idEtudiant)
     {
-        return role.Equals(Roles.Responsable) || role.Equals(Roles.Scolarite);
+        // Responsable et Scolarité peuvent supprimer n'importe quel étudiant
+        if (role.Equals(Roles.Responsable) || role.Equals(Roles.Scolarite)) return true;
+        // Un étudiant peut demander la suppression de son propre compte
+        return user?.Etudiant != null && role.Equals(Roles.Etudiant) && user.Etudiant.Id == idEtudiant;
     }
 }

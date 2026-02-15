@@ -8,12 +8,8 @@ using UniversiteDomain.Exceptions.CsvExceptions;
 
 namespace UniversiteEFDataProvider.Services;
 
-/// <summary>
-/// Service de manipulation CSV pour les notes utilisant CsvHelper
-/// </summary>
 public class CsvNoteService : ICsvNoteService
 {
-    /// <inheritdoc/>
     public byte[] GenerateCsv(List<NoteCsvDto> notes)
     {
         using var memoryStream = new MemoryStream();
@@ -49,7 +45,6 @@ public class CsvNoteService : ICsvNoteService
         return memoryStream.ToArray();
     }
 
-    /// <inheritdoc/>
     public List<NoteCsvDto> ParseCsv(Stream csvContent)
     {
         try
@@ -80,9 +75,6 @@ public class CsvNoteService : ICsvNoteService
     }
 }
 
-/// <summary>
-/// Mapping CsvHelper pour NoteCsvDto
-/// </summary>
 public sealed class NoteCsvDtoMap : ClassMap<NoteCsvDto>
 {
     public NoteCsvDtoMap()
@@ -97,9 +89,6 @@ public sealed class NoteCsvDtoMap : ClassMap<NoteCsvDto>
     }
 }
 
-/// <summary>
-/// Convertisseur pour les floats nullables (gère les cases vides)
-/// </summary>
 public class NullableFloatConverter : CsvHelper.TypeConversion.DefaultTypeConverter
 {
     public override object? ConvertFromString(string? text, IReaderRow row, MemberMapData memberMapData)

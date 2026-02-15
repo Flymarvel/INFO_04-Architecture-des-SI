@@ -45,4 +45,12 @@ public class NoteRepository(UniversiteDbContext context) : Repository<Note>(cont
             .Where(n => n.UeId == ueId)
             .ToListAsync();
     }
+
+    public async Task DeleteByEtudiantIdAsync(long etudiantId)
+    {
+        ArgumentNullException.ThrowIfNull(Context.Notes);
+        var notes = await Context.Notes.Where(n => n.EtudiantId == etudiantId).ToListAsync();
+        Context.Notes.RemoveRange(notes);
+        await Context.SaveChangesAsync();
+    }
 }

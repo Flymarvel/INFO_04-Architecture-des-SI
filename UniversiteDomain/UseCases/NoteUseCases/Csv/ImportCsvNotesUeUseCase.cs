@@ -2,21 +2,11 @@ using UniversiteDomain.DataAdapters.DataAdaptersFactory;
 using UniversiteDomain.Dtos.Csv;
 using UniversiteDomain.Entities;
 using UniversiteDomain.Exceptions.CsvExceptions;
-using UniversiteDomain.Exceptions.UeExceptions;
 
 namespace UniversiteDomain.UseCases.NoteUseCases.Csv;
 
-/// <summary>
-/// Use Case pour importer les notes d'une UE à partir d'un fichier CSV
-/// Les notes ne sont enregistrées que si aucune erreur n'est trouvée
-/// </summary>
 public class ImportCsvNotesUeUseCase(IRepositoryFactory repositoryFactory)
 {
-    /// <summary>
-    /// Importe les notes à partir du fichier CSV
-    /// </summary>
-    /// <param name="csvContent">Contenu du fichier CSV</param>
-    /// <returns>Nombre de notes créées/mises à jour</returns>
     public async Task<int> ExecuteAsync(Stream csvContent)
     {
         ArgumentNullException.ThrowIfNull(repositoryFactory);
@@ -41,9 +31,6 @@ public class ImportCsvNotesUeUseCase(IRepositoryFactory repositoryFactory)
         return notesValides.Count;
     }
 
-    /// <summary>
-    /// Valide toutes les données du CSV et prépare les notes à enregistrer
-    /// </summary>
     private async Task<(List<Note> notesValides, List<string> erreurs)> ValidateAndPrepareNotes(
         List<NoteCsvDto> notesCsv)
     {
@@ -125,9 +112,6 @@ public class ImportCsvNotesUeUseCase(IRepositoryFactory repositoryFactory)
         return (notesValides, erreurs);
     }
 
-    /// <summary>
-    /// Vérifie qu'un étudiant est bien inscrit dans un parcours qui enseigne l'UE
-    /// </summary>
     private async Task<bool> VerifierEtudiantInscritUe(long etudiantId, long ueId)
     {
         // Récupérer l'UE avec ses parcours
@@ -139,9 +123,6 @@ public class ImportCsvNotesUeUseCase(IRepositoryFactory repositoryFactory)
             p.Inscrits?.Any(e => e.Id == etudiantId) == true);
     }
 
-    /// <summary>
-    /// Vérifie que l'utilisateur est autorisé à importer les notes (Scolarité uniquement)
-    /// </summary>
     public bool IsAuthorized(string role)
     {
         if (role.Equals(Roles.Scolarite) || role.Equals(Roles.Responsable)) return true;

@@ -5,17 +5,8 @@ using UniversiteDomain.Exceptions.UeExceptions;
 
 namespace UniversiteDomain.UseCases.NoteUseCases.Csv;
 
-/// <summary>
-/// Use Case pour générer un fichier CSV de saisie des notes d'une UE
-/// Contient tous les étudiants qui suivent l'UE avec leurs notes existantes
-/// </summary>
 public class GenerateCsvNotesUeUseCase(IRepositoryFactory repositoryFactory)
 {
-    /// <summary>
-    /// Génère le fichier CSV pour saisir les notes d'une UE
-    /// </summary>
-    /// <param name="ueId">ID de l'UE</param>
-    /// <returns>Contenu du fichier CSV en bytes</returns>
     public async Task<byte[]> ExecuteAsync(long ueId)
     {
         await CheckBusinessRules(ueId);
@@ -71,10 +62,7 @@ public class GenerateCsvNotesUeUseCase(IRepositoryFactory repositoryFactory)
             throw new UeNotFoundException($"L'UE avec l'ID {ueId} n'existe pas");
     }
 
-    /// <summary>
-    /// Vérifie que l'utilisateur est autorisé à générer le CSV (Scolarité uniquement)
-    /// </summary>
-    public bool IsAuthorized(string role, IUniversiteUser user)
+    public bool IsAuthorized(string role)
     {
         if (role.Equals(Roles.Scolarite) || role.Equals(Roles.Responsable)) return true;
         // Si c'est un étudiant qui est connecté,

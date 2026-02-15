@@ -6,6 +6,7 @@ using UniversiteDomain.Entities;
 using UniversiteDomain.UseCases.EtudiantUseCases.Create;
 using UniversiteDomain.UseCases.EtudiantUseCases.Delete;
 using UniversiteDomain.UseCases.EtudiantUseCases.Get;
+using UniversiteDomain.UseCases.EtudiantUseCases.Update;
 using UniversiteDomain.UseCases.SecurityUseCases.Create;
 using UniversiteDomain.UseCases.SecurityUseCases.Get;
 using UniversiteEFDataProvider.Entities;
@@ -103,10 +104,19 @@ public class EtudiantController(IRepositoryFactory repositoryFactory) : Controll
         CreateEtudiantUseCase createEtudiantUc = new CreateEtudiantUseCase(repositoryFactory);
         CreateUniversiteUserUseCase createUserUc = new CreateUniversiteUserUseCase(repositoryFactory);
 
+        // Identification et authentification
         string role = "";
         string email = "";
         IUniversiteUser? user = null;
-        CheckSecu(out role, out email, out user);
+        try
+        {
+            CheckSecu(out role, out email, out user);
+        }
+        catch (Exception)
+        {
+            return Unauthorized();
+        }
+
         if (!createEtudiantUc.IsAuthorized(role) || !createUserUc.IsAuthorized(role)) return Unauthorized();
 
         Etudiant etud = etudiantDto.ToEntity();
@@ -142,13 +152,75 @@ public class EtudiantController(IRepositoryFactory repositoryFactory) : Controll
 
     // PUT api/<EtudiantController>/5
     [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    public async Task<ActionResult<EtudiantDto>> PutAsync(long id, [FromBody] EtudiantDto etudiantDto)
     {
+        // Identification et authentification
+        string role = "";
+        string email = "";
+        IUniversiteUser? user = null;
+        try
+        {
+            CheckSecu(out role, out email, out user);
+        }
+        catch (Exception e)
+        {
+            return Unauthorized();
+        }
+
+        UpdateEtudiantUseCase uc = new UpdateEtudiantUseCase(repositoryFactory);
+        // Autorisation
+        // On vérifie si l'utilisateur connecté a le droit de modifier la ressource
+        if (!uc.IsAuthorized(role, user, id)) return Unauthorized();
+
+        // On s'assure que l'id du DTO correspond à l'id de la route
+        etudiantDto.Id = id;
+        Etudiant etud = etudiantDto.ToEntity();
+
+        try
+        {
+            etud = await uc.ExecuteAsync(etud);
+        }
+        catch (Exception e)
+        {
+            ModelState.AddModelError(nameof(e), e.Message);
+            return ValidationProblem();
+        }
+
+        return new EtudiantDto().ToDto(etud);
     }
 
     // DELETE api/<EtudiantController>/5
     [HttpDelete("{id}")]
-    public void Delete(int id)
+    public async Task<ActionResult> DeleteAsync(long id)
     {
+        // Identification et authentification
+        string role = "";
+        string email = "";
+        IUniversiteUser? user = null;
+        try
+        {
+            CheckSecu(out role, out email, out user);
+        }
+        catch (Exception e)
+        {
+            return Unauthorized();
+        }
+
+        DeleteEtudiantUseCase uc = new DeleteEtudiantUseCase(repositoryFactory);
+        // Autorisation
+        // On vérifie si l'utilisateur connecté a le droit de supprimer la ressource
+        if (!uc.IsAuthorized(role, user, id)) return Unauthorized();
+
+        try
+        {
+            await uc.ExecuteAsync(id);
+        }
+        catch (Exception e)
+        {
+            ModelState.AddModelError(nameof(e), e.Message);
+            return ValidationProblem();
+        }
+
+        return NoContent();
     }
 }

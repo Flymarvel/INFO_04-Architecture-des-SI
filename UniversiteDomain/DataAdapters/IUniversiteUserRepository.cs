@@ -16,4 +16,6 @@ public interface IUniversiteUserRepository : IRepository<IUniversiteUser>
     Task<bool> IsInRoleAsync(string email, string role);
     // Vérification du mot de passe saisi par le user
     public Task<bool> CheckPasswordAsync(IUniversiteUser user, string password);
+    // Suppression du user associé à un étudiant
+    Task<int> DeleteByEtudiantIdAsync(long etudiantId);
 }

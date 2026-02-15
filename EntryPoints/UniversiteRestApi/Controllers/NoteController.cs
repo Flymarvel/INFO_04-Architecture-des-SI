@@ -44,12 +44,6 @@ public class NoteController(IRepositoryFactory repositoryFactory) : ControllerBa
         if (!isInRole) throw new UnauthorizedAccessException();
     }
 
-    /// <summary>
-    /// Télécharge un fichier CSV pour saisir les notes d'une UE
-    /// Le fichier contient tous les étudiants inscrits à l'UE avec leurs notes existantes
-    /// </summary>
-    /// <param name="ueId">ID de l'UE</param>
-    /// <returns>Fichier CSV</returns>
     [HttpGet("csv/{ueId}")]
     public async Task<IActionResult> GetCsvNotesUe(long ueId)
     {
@@ -69,7 +63,7 @@ public class NoteController(IRepositoryFactory repositoryFactory) : ControllerBa
         GenerateCsvNotesUeUseCase uc = new GenerateCsvNotesUeUseCase(repositoryFactory);
 
         // Vérifier l'autorisation (uniquement Scolarité)
-        if (!uc.IsAuthorized(role, user)) return Unauthorized("Seule la scolarité peut télécharger le fichier CSV des notes");
+        if (!uc.IsAuthorized(role)) return Unauthorized("Seule la scolarité peut télécharger le fichier CSV des notes");
 
         try
         {
@@ -87,12 +81,6 @@ public class NoteController(IRepositoryFactory repositoryFactory) : ControllerBa
         }
     }
 
-    /// <summary>
-    /// Importe les notes d'une UE à partir d'un fichier CSV
-    /// Les notes ne sont enregistrées que si aucune erreur n'est trouvée
-    /// </summary>
-    /// <param name="file">Fichier CSV contenant les notes</param>
-    /// <returns>Nombre de notes créées/mises à jour</returns>
     [HttpPost("csv")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> ImportCsvNotesUe(IFormFile file)

@@ -1,8 +1,5 @@
 namespace UniversiteDomain.Dtos.Csv;
 
-/// <summary>
-/// DTO pour l'import/export CSV des notes d'une UE
-/// </summary>
 public class NoteCsvDto
 {
     public string NumEtud { get; set; } = string.Empty;
